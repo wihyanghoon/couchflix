@@ -8,6 +8,7 @@ import { makImagePath, Types } from "../utills";
 import { useRecoilState } from "recoil";
 import { offestState } from "../atom";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
+import { BiXCircle } from "react-icons/bi";
 
 const Slider = ({ type }: { type: Types }) => {
   // 리액트쿼리
@@ -148,6 +149,7 @@ const Slider = ({ type }: { type: Types }) => {
               style={{ transform: "translate(-50%, -50%)" }}
               layoutId={type + paramId}
             >
+              <Close onClick={close}/>
               {movieInfo && (
                 <>
                   <ModalBg bg={makImagePath(movieInfo.backdrop_path)} />
@@ -197,6 +199,14 @@ const Section = styled.section`
     }
   }
 `;
+
+const Close = styled(BiXCircle)`
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+`
 
 const Prev = styled(GoChevronLeft)`
   position: absolute;

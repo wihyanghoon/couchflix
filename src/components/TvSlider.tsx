@@ -8,7 +8,7 @@ import { makImagePath, tvTypes } from "../utills";
 import { useRecoilState } from "recoil";
 import { offestState } from "../atom";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
-
+import { BiXCircle } from "react-icons/bi";
 
 const TvSlider = ({ type }: { type: tvTypes }) => {
   // 리액트쿼리
@@ -147,6 +147,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
               animate={{ opacity: 1 }}
             />
             <Modal layoutId={type + paramId}>
+                <Close onClick={close}/>
               {movieInfo && (
                 <>
                   <ModalBg bg={makImagePath(movieInfo.backdrop_path)}></ModalBg>
@@ -196,6 +197,14 @@ const Section = styled.section`
     }
   }
 `;
+
+const Close = styled(BiXCircle)`
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+`
 
 const Prev = styled(GoChevronLeft)`
   position: absolute;
