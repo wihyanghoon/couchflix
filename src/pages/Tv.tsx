@@ -7,7 +7,7 @@ import TvSlider from "../components/TvSlider";
 const Home = () => {
   const { data, isLoading } = useQuery<getTvTypes>(
     ["tv", "nowPlaying"],
-    () => getTv("popular")
+    () => getTv("top_rated")
   );
 
   return (
@@ -22,7 +22,9 @@ const Home = () => {
           </Banner>
 
           <Section>
+            <TvSlider type={tvTypes.top_rated} />
             <TvSlider type={tvTypes.airing_today} />
+            <TvSlider type={tvTypes.on_the_air} />
           </Section>
          
         </>

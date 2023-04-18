@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "react-query";
-import { getMoviTypes, getTv } from "../api";
+import { getTvTypes, getTv } from "../api";
 import { useMatch, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { makImagePath, tvTypes } from "../utills";
@@ -10,35 +10,35 @@ import { offestState } from "../atom";
 
 const TvSlider = ({ type }: { type: tvTypes }) => {
   // 리액트쿼리
-  const { data, isLoading } = useQuery<getMoviTypes>(["movie", type], () =>
+  const { data, isLoading } = useQuery<getTvTypes>(["tv", type], () =>
     getTv(type)
   );
-  
-  console.log(data)
+
+  console.log(data?.results[0].name);
 
   // 리액트라우터
   const moviePathMatch = useMatch(`/tv/${type}/:id`);
 
   // 리코일 아톰
-  const [offset, setOffset] = useRecoilState(offestState)
+  const [offset, setOffset] = useRecoilState(offestState);
 
-  useEffect(()=>{
+  useEffect(() => {
     const responsive = () => {
-      if(window.innerWidth <= 768){
-        setOffset(2)
+      if (window.innerWidth <= 768) {
+        setOffset(2);
       } else if (window.innerWidth <= 1024) {
-        setOffset(3)
+        setOffset(3);
       } else {
-        setOffset(6)
+        setOffset(6);
       }
-    }
+    };
 
-    window.addEventListener('resize', responsive);
+    window.addEventListener("resize", responsive);
 
     return () => {
-      window.removeEventListener('resize', responsive);
+      window.removeEventListener("resize", responsive);
     };
-  }, [setOffset])
+  }, [setOffset, window]);
 
   const navigate = useNavigate();
 
@@ -85,13 +85,13 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
   };
 
   const close = () => {
-    navigate("/");
+    navigate("/tv");
   };
   return (
     <>
       <Section>
         <h2>{type.toUpperCase()}</h2>
-        <Prev onClick={prev}>
+        <Prev className="btn" onClick={prev}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 256 512"
@@ -100,7 +100,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
             <path d="M137.4 406.6l-128-127.1C3.125 272.4 0 264.2 0 255.1s3.125-16.38 9.375-22.63l128-127.1c9.156-9.156 22.91-11.9 34.88-6.943S192 115.1 192 128v255.1c0 12.94-7.781 24.62-19.75 29.58S146.5 415.8 137.4 406.6z" />
           </svg>
         </Prev>
-        <Next onClick={next}>
+        <Next className="btn" onClick={next}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 256 512"
@@ -140,7 +140,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
                     onClick={() => modalHandler(movie.id)}
                   >
                     <Info variants={infoVariants}>
-                      <h4>{movie.title}</h4>
+                      <h4>{movie.name}</h4>
                     </Info>
                   </Box>
                 ))}
@@ -149,24 +149,31 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
         </TvSliders>
       </Section>
       <AnimatePresence>
-        { moviePathMatch ? (
+        {moviePathMatch ? (
           <>
             <Ovaray
               onClick={close}
               exit={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-            />
-            <Modal style={{ transform: "translate(-50%, -50%)"}} layoutId={type + paramId}>
-              {movieInfo && (
-                <div>
-                  <img src={makImagePath(movieInfo.poster_path)} alt="" />
+            >
+              <Modal
+                style={{ transform: "translate(-50%, -50%)" }}
+                layoutId={type + paramId}
+              >
+                {movieInfo && (
                   <div>
-                    <h4>{movieInfo.title}</h4>
-                    <p>{movieInfo.overview}</p>
+                    <ModalBg
+                      bg={makImagePath(movieInfo.backdrop_path)}
+                    ></ModalBg>
+                    <img src={makImagePath(movieInfo.poster_path)} alt="" />
+                    <div>
+                      <h4>{movieInfo.name}</h4>
+                      <p>{movieInfo.overview}</p>
+                    </div>
                   </div>
-                </div>
-              )}
-            </Modal>
+                )}
+              </Modal>
+            </Ovaray>
           </>
         ) : null}
       </AnimatePresence>
@@ -182,6 +189,11 @@ const Section = styled.section`
   h2 {
     font-size: 20px;
     font-weight: bold;
+  }
+
+  .btn {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
   }
 
   &:hover {
@@ -223,12 +235,11 @@ const Row = styled(motion.div)`
   top: 0;
   cursor: pointer;
 
-
-  @media screen and (max-width: 1024px){
+  @media screen and (max-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @media screen and (max-width: 768px){
+  @media screen and (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
 `;
@@ -261,33 +272,26 @@ const Info = styled(motion.div)`
 
 const Ovaray = styled(motion.div)`
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   position: fixed;
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 98;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Modal = styled(motion.div)`
-  position: fixed;
-  width: 50vw;
+  max-width: 950px;
   min-height: 500px;
   background-color: #2c2c2c;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) !important;
   border-radius: 20px;
   overflow: hidden;
   padding: 25px;
-  z-index: 99;
   > div {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-
     > div {
-      width: 50%;
       h4 {
         font-size: 31px;
       }
@@ -300,8 +304,17 @@ const Modal = styled(motion.div)`
     img {
       width: 50%;
       display: block;
+      margin-top: -30%;
     }
   }
+`;
+
+const ModalBg = styled.div<{ bg: string }>`
+  width: 100%;
+  background: url(${(props) => props.bg});
+  background-size: cover;
+  background-position: center center;
+  aspect-ratio: 16/9;
 `;
 
 const rowVariants = {

@@ -8,9 +8,6 @@ import { makImagePath, Types } from "../utills";
 import { useRecoilState } from "recoil";
 import { offestState } from "../atom";
 
-type PropsTypes = {
-  type: string;
-};
 
 const Slider = ({ type }: { type: Types }) => {
   // 리액트쿼리
