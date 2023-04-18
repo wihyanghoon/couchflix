@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { makImagePath, Types } from "../utills";
 import { useRecoilState } from "recoil";
 import { offestState } from "../atom";
-
+import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 
 const Slider = ({ type }: { type: Types }) => {
   // 리액트쿼리
@@ -19,25 +19,25 @@ const Slider = ({ type }: { type: Types }) => {
   const moviePathMatch = useMatch(`/movies/${type}/:id`);
 
   // 리코일 아톰
-  const [offset, setOffset] = useRecoilState(offestState)
+  const [offset, setOffset] = useRecoilState(offestState);
 
-  useEffect(()=>{
+  useEffect(() => {
     const responsive = () => {
-      if(window.innerWidth <= 768){
-        setOffset(2)
+      if (window.innerWidth <= 768) {
+        setOffset(2);
       } else if (window.innerWidth <= 1024) {
-        setOffset(3)
+        setOffset(3);
       } else {
-        setOffset(6)
+        setOffset(6);
       }
-    }
+    };
 
-    window.addEventListener('resize', responsive);
+    window.addEventListener("resize", responsive);
 
     return () => {
-      window.removeEventListener('resize', responsive);
+      window.removeEventListener("resize", responsive);
     };
-  }, [setOffset])
+  }, [setOffset]);
 
   const navigate = useNavigate();
 
@@ -77,6 +77,7 @@ const Slider = ({ type }: { type: Types }) => {
   const toggle = () => setIsplay((prev) => !prev);
 
   const modalHandler = (id: number) => {
+    document.body.style.overflowY = "hidden"
     navigate(`/movies/${type}/${id}`);
     // 여기로 보내야 카테고리별로 하나만 나옴 지금 현재 홈에서 Silder 자체를 랜더링중임
     // 여기로 가도 어차피 home 이 다시 랜더링 되고 슬라이더도 랜더링됨
@@ -84,29 +85,16 @@ const Slider = ({ type }: { type: Types }) => {
   };
 
   const close = () => {
+    document.body.style.overflowY = "auto"
     navigate("/");
   };
   return (
     <>
       <Section>
         <h2>{type.toUpperCase()}</h2>
-        <Prev onClick={prev}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 256 512"
-            fill="currentColor"
-          >
-            <path d="M137.4 406.6l-128-127.1C3.125 272.4 0 264.2 0 255.1s3.125-16.38 9.375-22.63l128-127.1c9.156-9.156 22.91-11.9 34.88-6.943S192 115.1 192 128v255.1c0 12.94-7.781 24.62-19.75 29.58S146.5 415.8 137.4 406.6z" />
-          </svg>
+        <Prev className="btn" onClick={prev}>
         </Prev>
-        <Next onClick={next}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 256 512"
-            fill="currentColor"
-          >
-            <path d="M118.6 105.4l128 127.1C252.9 239.6 256 247.8 256 255.1s-3.125 16.38-9.375 22.63l-128 127.1c-9.156 9.156-22.91 11.9-34.88 6.943S64 396.9 64 383.1V128c0-12.94 7.781-24.62 19.75-29.58S109.5 96.23 118.6 105.4z" />
-          </svg>
+        <Next className="btn" onClick={next}>
         </Next>
         <Sliders>
           <AnimatePresence
@@ -148,22 +136,33 @@ const Slider = ({ type }: { type: Types }) => {
         </Sliders>
       </Section>
       <AnimatePresence>
-        { moviePathMatch ? (
+        {moviePathMatch ? (
           <>
             <Ovaray
               onClick={close}
               exit={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             />
-            <Modal style={{ transform: "translate(-50%, -50%)"}} layoutId={type + paramId}>
+
+            <Modal
+              style={{ transform: "translate(-50%, -50%)" }}
+              layoutId={type + paramId}
+            >
               {movieInfo && (
-                <div>
+                <>
+                  <ModalBg bg={makImagePath(movieInfo.backdrop_path)} />
                   <img src={makImagePath(movieInfo.poster_path)} alt="" />
                   <div>
                     <h4>{movieInfo.title}</h4>
+                    <ul>
+                      <li>
+                        개봉일 | {movieInfo.release_date} | 평점 | ⭐️{" "}
+                        {movieInfo.vote_average}
+                      </li>
+                    </ul>
                     <p>{movieInfo.overview}</p>
                   </div>
-                </div>
+                </>
               )}
             </Modal>
           </>
@@ -183,29 +182,40 @@ const Section = styled.section`
     font-weight: bold;
   }
 
+  .btn {
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+  }
+
   &:hover {
     .btn {
       opacity: 1;
+
+      &:hover{
+        color: black;
+      }
     }
   }
 `;
 
-const Prev = styled.div`
+const Prev = styled(GoChevronLeft)`
   position: absolute;
   width: 50px;
   height: 50px;
   z-index: 1;
   left: 0;
   top: 50%;
-  transform: translate(0, -50%);
+  transform: translate(0, -60%);
 `;
 
-const Next = styled.div`
+const Next = styled(GoChevronRight)`
   position: absolute;
   width: 50px;
   height: 50px;
   z-index: 1;
   right: 0;
+  top: 50%;
+  transform: translate(0, -60%);
 `;
 
 const Sliders = styled.div`
@@ -222,12 +232,11 @@ const Row = styled(motion.div)`
   top: 0;
   cursor: pointer;
 
-
-  @media screen and (max-width: 1024px){
+  @media screen and (max-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @media screen and (max-width: 768px){
+  @media screen and (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
 `;
@@ -236,7 +245,7 @@ const Box = styled(motion.div)<{ bg: string }>`
   background-image: url(${(props) => props.bg});
   background-size: cover;
   background-position: center center;
-  height: 200px;
+  aspect-ratio: 16/10;
   border-radius: 10px;
   &:first-child {
     transform-origin: center left;
@@ -259,48 +268,82 @@ const Info = styled(motion.div)`
 `;
 
 const Ovaray = styled(motion.div)`
-  width: 100%;
-  height: 100%;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 98;
+  opacity: 0;
+  z-index: 99;
 `;
 
 const Modal = styled(motion.div)`
   position: fixed;
-  width: 50vw;
-  min-height: 500px;
-  background-color: #2c2c2c;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) !important;
-  border-radius: 20px;
-  overflow: hidden;
-  padding: 25px;
-  z-index: 99;
-  > div {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
+  top: 12rem;
+  left: 0px;
+  right: 0px;
+  margin: 0px auto;
+  width: 50%;
+  height: 75%;
+  overflow: auto;
+  border-radius: 1.5rem;
+  background-color: rgb(47, 47, 47);
+  color: rgb(255, 255, 255);
+  z-index: 100;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
-    > div {
-      width: 50%;
-      h4 {
-        font-size: 31px;
-      }
+  img {
+    display: block;
+    max-width: 400px;
+    width: 100%;
+    margin: -100px auto;
+  }
 
-      p {
-        font-size: 24px;
-        margin-top: 20px;
-      }
+  div {
+    text-align: center;
+    h4 {
+      margin-top: 120px;
+      font-size: 28px;
+      font-weight: 500;
     }
-    img {
-      width: 50%;
+    ul li {
       display: block;
+      margin-top: 16px;
+    }
+
+    p {
+      width: 50%;
+      margin: 0 auto;
+      margin-top: 15px;
+      font-size: 18px;
+      padding: 16px 16px 32px 16px;
     }
   }
+
+  @media screen and (max-width: 1024px) {
+    & {
+      width: 100%;
+      img {
+        width: calc(100% - 32px);
+      }
+      div {
+        p {
+          width: 100%;
+        }
+      }
+    }
+  }
+`;
+
+const ModalBg = styled.div<{ bg: string }>`
+  width: 100%;
+  background: url(${(props) => props.bg});
+  background-size: cover;
+  background-position: center center;
+  aspect-ratio: 16/9;
 `;
 
 const rowVariants = {

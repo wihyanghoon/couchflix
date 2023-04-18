@@ -7,6 +7,8 @@ export type movieType = {
   poster_path: string;
   title: string;
   overview: string;
+  release_date: string;
+  vote_average: string;
 };
 
 export type getMoviTypes = {

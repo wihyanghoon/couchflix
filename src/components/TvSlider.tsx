@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { makImagePath, tvTypes } from "../utills";
 import { useRecoilState } from "recoil";
 import { offestState } from "../atom";
+import { GoChevronLeft, GoChevronRight } from "react-icons/go";
+
 
 const TvSlider = ({ type }: { type: tvTypes }) => {
   // 리액트쿼리
@@ -14,7 +16,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
     getTv(type)
   );
 
-  console.log(data?.results[0].name);
+  console.log(data?.results[0]);
 
   // 리액트라우터
   const moviePathMatch = useMatch(`/tv/${type}/:id`);
@@ -78,6 +80,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
   const toggle = () => setIsplay((prev) => !prev);
 
   const modalHandler = (id: number) => {
+    document.body.style.overflowY = "hidden";
     navigate(`/tv/${type}/${id}`);
     // 여기로 보내야 카테고리별로 하나만 나옴 지금 현재 홈에서 Silder 자체를 랜더링중임
     // 여기로 가도 어차피 home 이 다시 랜더링 되고 슬라이더도 랜더링됨
@@ -85,6 +88,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
   };
 
   const close = () => {
+    document.body.style.overflowY = "auto";
     navigate("/tv");
   };
   return (
@@ -92,22 +96,8 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
       <Section>
         <h2>{type.toUpperCase()}</h2>
         <Prev className="btn" onClick={prev}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 256 512"
-            fill="currentColor"
-          >
-            <path d="M137.4 406.6l-128-127.1C3.125 272.4 0 264.2 0 255.1s3.125-16.38 9.375-22.63l128-127.1c9.156-9.156 22.91-11.9 34.88-6.943S192 115.1 192 128v255.1c0 12.94-7.781 24.62-19.75 29.58S146.5 415.8 137.4 406.6z" />
-          </svg>
         </Prev>
         <Next className="btn" onClick={next}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 256 512"
-            fill="currentColor"
-          >
-            <path d="M118.6 105.4l128 127.1C252.9 239.6 256 247.8 256 255.1s-3.125 16.38-9.375 22.63l-128 127.1c-9.156 9.156-22.91 11.9-34.88 6.943S64 396.9 64 383.1V128c0-12.94 7.781-24.62 19.75-29.58S109.5 96.23 118.6 105.4z" />
-          </svg>
         </Next>
         <TvSliders>
           <AnimatePresence
@@ -155,25 +145,25 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
               onClick={close}
               exit={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-            >
-              <Modal
-                style={{ transform: "translate(-50%, -50%)" }}
-                layoutId={type + paramId}
-              >
-                {movieInfo && (
+            />
+            <Modal layoutId={type + paramId}>
+              {movieInfo && (
+                <>
+                  <ModalBg bg={makImagePath(movieInfo.backdrop_path)}></ModalBg>
+                  <img src={makImagePath(movieInfo.poster_path)} alt="" />
                   <div>
-                    <ModalBg
-                      bg={makImagePath(movieInfo.backdrop_path)}
-                    ></ModalBg>
-                    <img src={makImagePath(movieInfo.poster_path)} alt="" />
-                    <div>
-                      <h4>{movieInfo.name}</h4>
-                      <p>{movieInfo.overview}</p>
-                    </div>
+                    <h4>{movieInfo.name}</h4>
+                    <ul>
+                      <li>
+                        개봉일 | {movieInfo.first_air_date} | 평점 | ⭐️{" "}
+                        {movieInfo.vote_average}
+                      </li>
+                    </ul>
+                    <p>{movieInfo.overview}</p>
                   </div>
-                )}
-              </Modal>
-            </Ovaray>
+                </>
+              )}
+            </Modal>
           </>
         ) : null}
       </AnimatePresence>
@@ -193,32 +183,38 @@ const Section = styled.section`
 
   .btn {
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
   }
 
   &:hover {
     .btn {
       opacity: 1;
+
+      &:hover{
+        color: black;
+      }
     }
   }
 `;
 
-const Prev = styled.div`
+const Prev = styled(GoChevronLeft)`
   position: absolute;
   width: 50px;
   height: 50px;
   z-index: 1;
   left: 0;
   top: 50%;
-  transform: translate(0, -50%);
+  transform: translate(0, -60%);
 `;
 
-const Next = styled.div`
+const Next = styled(GoChevronRight)`
   position: absolute;
   width: 50px;
   height: 50px;
   z-index: 1;
   right: 0;
+  top: 50%;
+  transform: translate(0, -60%);
 `;
 
 const TvSliders = styled.div`
@@ -248,7 +244,7 @@ const Box = styled(motion.div)<{ bg: string }>`
   background-image: url(${(props) => props.bg});
   background-size: cover;
   background-position: center center;
-  height: 200px;
+  aspect-ratio: 16/10;
   border-radius: 10px;
   &:first-child {
     transform-origin: center left;
@@ -271,40 +267,72 @@ const Info = styled(motion.div)`
 `;
 
 const Ovaray = styled(motion.div)`
-  width: 100%;
-  min-height: 100%;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 98;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  opacity: 0;
+  z-index: 99;
 `;
 
 const Modal = styled(motion.div)`
-  max-width: 950px;
-  min-height: 500px;
-  background-color: #2c2c2c;
-  border-radius: 20px;
-  overflow: hidden;
-  padding: 25px;
-  > div {
-    > div {
-      h4 {
-        font-size: 31px;
-      }
+  position: fixed;
+  top: 12rem;
+  left: 0px;
+  right: 0px;
+  margin: 0px auto;
+  width: 50%;
+  height: 75%;
+  overflow: auto;
+  border-radius: 1.5rem;
+  background-color: rgb(47, 47, 47);
+  color: rgb(255, 255, 255);
+  z-index: 100;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
-      p {
-        font-size: 24px;
-        margin-top: 20px;
-      }
+  img {
+    display: block;
+    max-width: 400px;
+    width: 100%;
+    margin: -100px auto;
+  }
+
+  div {
+    text-align: center;
+    h4 {
+      margin-top: 120px;
+      font-size: 28px;
+      font-weight: 500;
     }
-    img {
-      width: 50%;
+    ul li {
       display: block;
-      margin-top: -30%;
+      margin-top: 16px;
+    }
+
+    p {
+      width: 50%;
+      margin: 0 auto;
+      margin-top: 15px;
+      font-size: 18px;
+      padding: 16px 16px 32px 16px;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    & {
+      width: 100%;
+      img {
+        width: calc(100% - 32px);
+      }
+      div {
+        p {
+          width: 100%;
+        }
+      }
     }
   }
 `;
