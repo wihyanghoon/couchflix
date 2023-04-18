@@ -20,8 +20,8 @@ export type getMoviTypes = {
   total_results: number;
 };
 
-export const getMovie = () => {
-  return fetch(`${BASE}/movie/now_playing?api_key=${API_KEY}`).then((res) =>
+export const getMovie = (type: string) => {
+  return fetch(`${BASE}/movie/${type}?api_key=${API_KEY}`).then((res) =>
     res.json()
   );
 };
