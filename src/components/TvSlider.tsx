@@ -1,25 +1,23 @@
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "react-query";
-import { getMoviTypes, getMovie } from "../api";
-import { PathMatch, useMatch, useNavigate, useParams } from "react-router-dom";
+import { getMoviTypes, getTv } from "../api";
+import { useMatch, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { makImagePath, Types } from "../utills";
+import { makImagePath, tvTypes } from "../utills";
 import { useRecoilState } from "recoil";
 import { offestState } from "../atom";
 
-type PropsTypes = {
-  type: string;
-};
-
-const Slider = ({ type }: { type: Types }) => {
+const TvSlider = ({ type }: { type: tvTypes }) => {
   // 리액트쿼리
   const { data, isLoading } = useQuery<getMoviTypes>(["movie", type], () =>
-    getMovie(type)
+    getTv(type)
   );
+  
+  console.log(data)
 
   // 리액트라우터
-  const moviePathMatch = useMatch(`/movies/${type}/:id`);
+  const moviePathMatch = useMatch(`/tv/${type}/:id`);
 
   // 리코일 아톰
   const [offset, setOffset] = useRecoilState(offestState)
@@ -80,7 +78,7 @@ const Slider = ({ type }: { type: Types }) => {
   const toggle = () => setIsplay((prev) => !prev);
 
   const modalHandler = (id: number) => {
-    navigate(`/movies/${type}/${id}`);
+    navigate(`/tv/${type}/${id}`);
     // 여기로 보내야 카테고리별로 하나만 나옴 지금 현재 홈에서 Silder 자체를 랜더링중임
     // 여기로 가도 어차피 home 이 다시 랜더링 되고 슬라이더도 랜더링됨
     // 그럼 라우터 매치를 하고 id 값이 같을테니 모달창이 랜더링됨
@@ -111,7 +109,7 @@ const Slider = ({ type }: { type: Types }) => {
             <path d="M118.6 105.4l128 127.1C252.9 239.6 256 247.8 256 255.1s-3.125 16.38-9.375 22.63l-128 127.1c-9.156 9.156-22.91 11.9-34.88 6.943S64 396.9 64 383.1V128c0-12.94 7.781-24.62 19.75-29.58S109.5 96.23 118.6 105.4z" />
           </svg>
         </Next>
-        <Sliders>
+        <TvSliders>
           <AnimatePresence
             initial={false}
             onExitComplete={toggle}
@@ -148,7 +146,7 @@ const Slider = ({ type }: { type: Types }) => {
                 ))}
             </Row>
           </AnimatePresence>
-        </Sliders>
+        </TvSliders>
       </Section>
       <AnimatePresence>
         { moviePathMatch ? (
@@ -211,7 +209,7 @@ const Next = styled.div`
   right: 0;
 `;
 
-const Sliders = styled.div`
+const TvSliders = styled.div`
   position: relative;
   min-height: 200px;
 `;
@@ -347,4 +345,4 @@ const infoVariants = {
   },
 };
 
-export default Slider;
+export default TvSlider;

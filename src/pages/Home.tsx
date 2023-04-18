@@ -60,10 +60,15 @@ const Banner = styled.div<{ bg: string }>`
   flex-direction: column;
   justify-content: center;
   padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)),
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 1)),
     url(${(props) => props.bg});
   background-size: cover;
   background-position: center center;
+
+  @media screen and (max-width: 1024px){
+    padding: 32px;
+    min-height: 60vh;
+  }
 `;
 
 const Title = styled.h2`
@@ -96,6 +101,10 @@ const Section = styled.section`
   width: 100%;
   margin-top: -200px;
   padding: 0px 60px;
+
+  @media screen and (max-width: 1024px){
+    padding: 0px 32px;
+  }
 `;
 
 export default Home;

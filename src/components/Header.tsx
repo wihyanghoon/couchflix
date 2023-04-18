@@ -112,6 +112,10 @@ const Nav = styled(motion.nav)`
   font-size: 14px;
   padding: 20px 60px;
   color: white;
+
+  @media screen and (max-width:1024px) {
+    padding: 20px 32px;
+  }
 `;
 
 const Col = styled.div`
