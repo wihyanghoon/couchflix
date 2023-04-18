@@ -42,6 +42,10 @@ footer, header, hgroup, main, menu, nav, section {
 body {
   line-height: 1;
   overflow-x: hidden;
+
+  @media screen and (max-width:768px){
+    font-size: 12px;
+  }
 }
 menu, ol, ul {
   list-style: none;

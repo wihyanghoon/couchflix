@@ -67,24 +67,35 @@ const Banner = styled.div<{ bg: string }>`
 `;
 
 const Title = styled.h2`
-  font-size: 68px;
+  font-size: 4.25rem;
+  font-weight: 600;
   margin-bottom: 20px;
+
+  @media screen and (max-width: 768px){
+    font-size: 32px;
+  }
 `;
 
 const Overview = styled.p`
-  font-size: 30px;
+  font-size: 21px;
+  font-weight: 300;
+  line-height: 1.5;
   width: 50%;
+
+  @media screen and (max-width: 1024px){
+    width: 100%;
+  }
+
+  @media screen and (max-width: 768px){
+    font-size: 16px;
+  }
 `;
 
+// 비디오 컨테이너
 const Section = styled.section`
   width: 100%;
-  min-height: 400px;
   margin-top: -200px;
-  position: relative;
-  h2 {
-    font-size: 20px;
-    font-weight: bold;
-  }
+  padding: 0px 60px;
 `;
 
 export default Home;

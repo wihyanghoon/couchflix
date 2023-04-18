@@ -21,7 +21,7 @@ export type getMoviTypes = {
 };
 
 export const getMovie = (type: string) => {
-  return fetch(`${BASE}/movie/${type}?api_key=${API_KEY}`).then((res) =>
+  return fetch(`${BASE}/movie/${type}?api_key=${API_KEY}&language=ko-KO`).then((res) =>
     res.json()
   );
 };
