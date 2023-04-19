@@ -36,7 +36,6 @@ const Home = () => {
             <Slider type={Types.top_rated} />
             <Slider type={Types.upcoming} />
           </Section>
-         
         </>
       )}
     </Wrapper>
@@ -65,9 +64,8 @@ const Banner = styled.div<{ bg: string }>`
   background-size: cover;
   background-position: center center;
 
-  @media screen and (max-width: 1024px){
+  @media screen and (max-width: 1024px) {
     padding: 32px;
-    min-height: 60vh;
   }
 `;
 
@@ -76,7 +74,7 @@ const Title = styled.h2`
   font-weight: 600;
   margin-bottom: 20px;
 
-  @media screen and (max-width: 768px){
+  @media screen and (max-width: 768px) {
     font-size: 32px;
   }
 `;
@@ -87,11 +85,11 @@ const Overview = styled.p`
   line-height: 1.5;
   width: 50%;
 
-  @media screen and (max-width: 1024px){
+  @media screen and (max-width: 1024px) {
     width: 100%;
   }
 
-  @media screen and (max-width: 768px){
+  @media screen and (max-width: 768px) {
     font-size: 16px;
   }
 `;
@@ -102,7 +100,7 @@ const Section = styled.section`
   margin-top: -200px;
   padding: 0px 60px;
 
-  @media screen and (max-width: 1024px){
+  @media screen and (max-width: 1024px) {
     padding: 0px 32px;
     margin-top: -50px;
   }

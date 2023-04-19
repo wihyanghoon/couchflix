@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "react-query";
 import { getMoviTypes, getMovie } from "../api";
 import { PathMatch, useMatch, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { makImagePath, Types } from "../utills";
 import { useRecoilState } from "recoil";
 import { offestState } from "../atom";
@@ -11,6 +11,25 @@ import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { BiXCircle } from "react-icons/bi";
 
 const Slider = ({ type }: { type: Types }) => {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number>(0);
+
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      setTimeout(() => {
+        if (slideRef.current) {
+          setHeight(slideRef.current.offsetHeight);
+        }
+      }, 100);
+    };
+  
+    handleResize(); // 초기화시 실행
+    window.addEventListener('resize', handleResize);
+  
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [slideRef , height, window]);
   // 리액트쿼리
   const { data, isLoading } = useQuery<getMoviTypes>(["movie", type], () =>
     getMovie(type)
@@ -97,13 +116,14 @@ const Slider = ({ type }: { type: Types }) => {
         </Prev>
         <Next className="btn" onClick={next}>
         </Next>
-        <Sliders>
+        <Sliders height={height}>
           <AnimatePresence
             initial={false}
             onExitComplete={toggle}
             custom={isRight}
           >
             <Row
+              ref={slideRef}
               variants={rowVariants}
               initial="hidden"
               animate="visible"
@@ -215,7 +235,7 @@ const Prev = styled(GoChevronLeft)`
   z-index: 1;
   left: 0;
   top: 50%;
-  transform: translate(0, -60%);
+  transform: translate(0, -50%);
 `;
 
 const Next = styled(GoChevronRight)`
@@ -225,12 +245,12 @@ const Next = styled(GoChevronRight)`
   z-index: 1;
   right: 0;
   top: 50%;
-  transform: translate(0, -60%);
+  transform: translate(0, -50%);
 `;
 
-const Sliders = styled.div`
+const Sliders = styled.div<{height: number}>`
   position: relative;
-  min-height: 200px;
+  height: ${props=> props.height + "px"};
 `;
 
 const Row = styled(motion.div)`

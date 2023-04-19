@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "react-query";
 import { getTvTypes, getTv } from "../api";
 import { useMatch, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { makImagePath, tvTypes } from "../utills";
 import { useRecoilState } from "recoil";
 import { offestState } from "../atom";
@@ -11,12 +11,30 @@ import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { BiXCircle } from "react-icons/bi";
 
 const TvSlider = ({ type }: { type: tvTypes }) => {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number>(0);
+
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      setTimeout(() => {
+        if (slideRef.current) {
+          setHeight(slideRef.current.offsetHeight);
+        }
+      }, 100);
+    };
+  
+    handleResize(); // 초기화시 실행
+    window.addEventListener('resize', handleResize);
+  
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [slideRef , height, window]);
+
   // 리액트쿼리
   const { data, isLoading } = useQuery<getTvTypes>(["tv", type], () =>
     getTv(type)
   );
-
-  console.log(data?.results[0]);
 
   // 리액트라우터
   const moviePathMatch = useMatch(`/tv/${type}/:id`);
@@ -95,17 +113,16 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
     <>
       <Section>
         <h2>{type.toUpperCase()}</h2>
-        <Prev className="btn" onClick={prev}>
-        </Prev>
-        <Next className="btn" onClick={next}>
-        </Next>
-        <TvSliders>
+        <Prev className="btn" onClick={prev}></Prev>
+        <Next className="btn" onClick={next}></Next>
+        <TvSliders height={height}>
           <AnimatePresence
             initial={false}
             onExitComplete={toggle}
             custom={isRight}
           >
             <Row
+              ref={slideRef}
               variants={rowVariants}
               initial="hidden"
               animate="visible"
@@ -147,7 +164,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
               animate={{ opacity: 1 }}
             />
             <Modal layoutId={type + paramId}>
-                <Close onClick={close}/>
+              <Close onClick={close} />
               {movieInfo && (
                 <>
                   <ModalBg bg={makImagePath(movieInfo.backdrop_path)}></ModalBg>
@@ -172,7 +189,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
   );
 };
 
-const Section = styled.section`
+const Section = styled.div`
   width: 100%;
   height: auto;
   position: relative;
@@ -191,7 +208,7 @@ const Section = styled.section`
     .btn {
       opacity: 1;
 
-      &:hover{
+      &:hover {
         color: black;
       }
     }
@@ -204,7 +221,7 @@ const Close = styled(BiXCircle)`
   position: absolute;
   top: 30px;
   right: 30px;
-`
+`;
 
 const Prev = styled(GoChevronLeft)`
   position: absolute;
@@ -213,7 +230,7 @@ const Prev = styled(GoChevronLeft)`
   z-index: 1;
   left: 0;
   top: 50%;
-  transform: translate(0, -60%);
+  transform: translate(0, -50%);
 `;
 
 const Next = styled(GoChevronRight)`
@@ -223,12 +240,12 @@ const Next = styled(GoChevronRight)`
   z-index: 1;
   right: 0;
   top: 50%;
-  transform: translate(0, -60%);
+  transform: translate(0, -50%);
 `;
 
-const TvSliders = styled.div`
+const TvSliders = styled.div<{ height: number }>`
   position: relative;
-  min-height: 200px;
+  height: ${(props) => props.height + "px"};
 `;
 
 const Row = styled(motion.div)`

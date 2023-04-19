@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Tv from "./pages/Tv";
 import Search from "./pages/Search";
 import Header from "./components/Header";
+import Helmet from './components/Helmet';
 //page componets
 function App() {
   return (
