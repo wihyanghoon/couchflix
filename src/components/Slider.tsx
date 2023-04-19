@@ -306,6 +306,12 @@ const Ovaray = styled(motion.div)`
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
   z-index: 99;
+
+  @media screen and (max-width: 1024px) {
+    &{
+      height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    }
+  }
 `;
 
 const Modal = styled(motion.div)`

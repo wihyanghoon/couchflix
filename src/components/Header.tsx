@@ -112,7 +112,7 @@ const Nav = styled(motion.nav)`
   font-size: 14px;
   padding: 20px 60px;
   color: white;
-
+  z-index: 99;
   @media screen and (max-width:1024px) {
     padding: 20px 32px;
   }
@@ -193,10 +193,10 @@ const Input = styled(motion.input)`
 
 const navVariants = {
   top: {
-    backgroundColor: "rgba(0, 0, 0, 1)",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
   },
   scroll: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "rgba(0, 0, 0, 1)",
   }
 }
 
