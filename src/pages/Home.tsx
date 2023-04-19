@@ -99,7 +99,7 @@ const Section = styled.section`
   width: 100%;
   margin-top: -200px;
   padding: 0px 60px;
-
+  overflow: hidden;
   @media screen and (max-width: 1024px) {
     padding: 0px 32px;
     margin-top: -50px;

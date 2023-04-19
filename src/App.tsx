@@ -11,6 +11,7 @@ function App() {
   return (
     <>
       <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <Helmet />
         <Header />
         <Routes>
           <Route path="/" element={<Home />}></Route>
