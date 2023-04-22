@@ -12,15 +12,15 @@ import { BiXCircle } from "react-icons/bi";
 
 const Slider = ({ type }: { type: Types }) => {
   const slideRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState<number>(0);
+  const [height, setHeight] = useState<number>(200);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       setTimeout(() => {
         if (slideRef.current) {
           setHeight(slideRef.current.offsetHeight);
         }
-      }, 100);
+      }, 300);
     };
   
     handleResize(); // 초기화시 실행
@@ -29,7 +29,7 @@ const Slider = ({ type }: { type: Types }) => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [slideRef , height, window]);
+  }, [slideRef, height, window]);
   // 리액트쿼리
   const { data, isLoading } = useQuery<getMoviTypes>(["movie", type], () =>
     getMovie(type)
@@ -57,7 +57,7 @@ const Slider = ({ type }: { type: Types }) => {
     return () => {
       window.removeEventListener("resize", responsive);
     };
-  }, [setOffset]);
+  }, [setOffset, window]);
 
   const navigate = useNavigate();
 
@@ -362,6 +362,7 @@ const Modal = styled(motion.div)`
   @media screen and (max-width: 1024px) {
     & {
       width: 100%;
+      top: 100px;
       img {
         width: calc(100% - 32px);
       }

@@ -6,6 +6,7 @@ import Tv from "./pages/Tv";
 import Search from "./pages/Search";
 import Header from "./components/Header";
 import Helmet from './components/Helmet';
+import Footer from "./components/Footer";
 //page componets
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/tv/:type/:id" element={<Tv />}></Route>
           <Route path="/search" element={<Search />}></Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );

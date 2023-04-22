@@ -139,7 +139,7 @@ const TvSlider = ({ type }: { type: tvTypes }) => {
                   <Box
                     layoutId={type + movie.id}
                     key={type + movie.id}
-                    bg={makImagePath(movie.backdrop_path)}
+                    bg={makImagePath(movie.backdrop_path || movie.poster_path)}
                     variants={BoxVariants}
                     whileHover={"hover"}
                     initial={"normal"}
@@ -351,6 +351,7 @@ const Modal = styled(motion.div)`
   @media screen and (max-width: 1024px) {
     & {
       width: 100%;
+      top: 100px;
       img {
         width: calc(100% - 32px);
       }

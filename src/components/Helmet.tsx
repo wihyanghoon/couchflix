@@ -6,7 +6,7 @@ const Helmet = () => {
   return (
     <>
       <Header>
-        <title>넷플릭스</title>
+        <title>Couchflix</title>
       </Header>
     </>
   );

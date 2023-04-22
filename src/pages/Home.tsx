@@ -1,17 +1,9 @@
-import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { getMoviTypes, getMovie } from "../api";
 import styled from "styled-components";
 import { makImagePath, Types } from "../utills";
-import {
-  motion,
-  AnimatePresence,
-  animate,
-  useViewportScroll,
-} from "framer-motion";
-import { useNavigate, useParams } from "react-router-dom";
-import { useMatch, PathMatch } from "react-router-dom";
 import Slider from "../components/Slider";
+import Loading from "../components/Loading";
 
 const Home = () => {
   const { data, isLoading } = useQuery<getMoviTypes>(
@@ -22,7 +14,7 @@ const Home = () => {
   return (
     <Wrapper>
       {isLoading ? (
-        <Loader>Loading...</Loader>
+        <Loading></Loading>
       ) : (
         <>
           <Banner bg={makImagePath(data?.results[0].backdrop_path || "")}>
