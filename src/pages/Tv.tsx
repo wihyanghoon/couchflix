@@ -57,7 +57,6 @@ const Banner = styled.div<{ bg: string }>`
 
   @media screen and (max-width: 1024px){
     padding: 32px;
-    min-height: 60vh;
   }
 `;
 
