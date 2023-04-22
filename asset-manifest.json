@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/nonflix/static/css/main.31d6cfe0.css",
-    "main.js": "/nonflix/static/js/main.4a2f5869.js",
+    "main.js": "/nonflix/static/js/main.f036933b.js",
     "index.html": "/nonflix/index.html",
-    "main.4a2f5869.js.map": "/nonflix/static/js/main.4a2f5869.js.map"
+    "main.f036933b.js.map": "/nonflix/static/js/main.f036933b.js.map"
   },
   "entrypoints": [
     "static/css/main.31d6cfe0.css",
-    "static/js/main.4a2f5869.js"
+    "static/js/main.f036933b.js"
   ]
 }
