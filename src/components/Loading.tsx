@@ -22,6 +22,15 @@ const Wrap = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    h1{
+        max-width: 200px;
+        width: 100%;
+        img{
+            display: block;
+            width: 100%;
+        }
+    }
 `
 
 export default Loading
