@@ -1,4 +1,4 @@
-## couchfilx (미디어 정보 사이트)
+## couchflix (미디어 정보 사이트)
 ![couchflix01](https://user-images.githubusercontent.com/66665468/234607930-1c955e32-5d49-49d4-bea6-130f3bc18815.jpg)
 
 #### 프로젝트 기간
