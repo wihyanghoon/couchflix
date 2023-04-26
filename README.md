@@ -11,7 +11,7 @@
 리액트 쿼리 및 리코일을 이용한 캐싱 및 상태관리 framer-motion을 이용해 만든 애니메이션 컴포넌트 제작
 
 #### 프로젝트 URL
-http://www.travelcode95.com/
+https://wihyanghoon.github.io/couchflix/
 
 ## 팀원 구성
 | **위향훈(프론트엔드)** |
