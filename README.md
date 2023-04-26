@@ -1,5 +1,5 @@
 ## couchfilx (미디어 정보 사이트)
-![photoshop01](https://user-images.githubusercontent.com/66665468/225891581-d5ffae10-76f6-4649-8742-9b9ee9d9da0a.jpg)
+![couchflix01](https://user-images.githubusercontent.com/66665468/234607930-1c955e32-5d49-49d4-bea6-130f3bc18815.jpg)
 
 #### 프로젝트 기간
 2023.04 ~ 2023.04.20
